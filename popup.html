@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="width: 320px; padding: 15px; font-family: sans-serif;">
+    <h3 style="margin-top: 0;">🪣 My LinkedIn Bucket</h3>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <button id="exportBtn" style="background-color: #057642; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 5px; font-weight: bold;">📥 Export CSV</button>
+        <button id="clearBtn" style="background-color: #d11a2a; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 5px; font-weight: bold;">🗑️ Clear</button>
+    </div>
+    
+    <div id="tabsContainer" style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px;">
+        </div>
+    
+    <div id="output"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
