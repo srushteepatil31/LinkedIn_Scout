@@ -1,8 +1,3 @@
-/**
- * LinkedIn Bucket Saver — popup.js v3 (COMPLETE)
- * Features: tabs, cards, delete, notes, export CSV, clear all.
- */
-
 document.addEventListener('DOMContentLoaded', function () {
 
   var globalData = [];
@@ -13,13 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var exportBtn      = document.getElementById('export-btn');
   var clearBtn       = document.getElementById('clear-btn');
 
-  /* ── Bootstrap ── */
+  /* Bootstrap*/
   loadData();
 
   exportBtn.addEventListener('click', exportCSV);
   clearBtn.addEventListener('click', clearAll);
 
-  /* ── Load from storage ── */
+  /* Load from storage */
   function loadData() {
     chrome.storage.local.get(['linkedin_crm_data'], function (result) {
       globalData = result.linkedin_crm_data || [];
@@ -28,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Tabs ── */
+  /* Tabs  */
   function renderTabs() {
     tabsContainer.innerHTML = '';
     var categories = ['All'].concat(
@@ -52,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Cards ── */
+  /* Cards */
   function renderCards() {
     cardsContainer.innerHTML = '';
 
@@ -76,13 +71,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Build a single card ── */
+  /*  Build a single card */
   function buildCard(item) {
     var card = document.createElement('div');
     card.className = 'crm-card';
     card.dataset.id = item.id;
 
-    // ── Header row ──
+    //  Header row 
     var headerDiv = document.createElement('div');
     headerDiv.className = 'card-header';
 
@@ -112,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
     headerDiv.appendChild(leftDiv);
     headerDiv.appendChild(delBtn);
 
-    // ── Details list ──
+    //  Details list 
     var ul = document.createElement('ul');
     ul.className = 'card-details';
     var detailsArr = Array.isArray(item.details) ? item.details : [item.details || ''];
@@ -123,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ul.appendChild(li);
     });
 
-    // ── Profile URL link ──
+    //  Profile URL link 
     var urlRow = '';
     if (item.profileUrl) {
       var link = document.createElement('a');
@@ -134,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
       link.textContent = '🔗 View Profile';
     }
 
-    // ── Notes area ──
+    // Notes area 
     var noteArea = document.createElement('textarea');
     noteArea.className = 'note-input';
     noteArea.placeholder = 'Add a personal note…';
@@ -153,14 +148,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     noteFooter.appendChild(saveNoteBtn);
 
-    // ── Timestamp ──
+    //  Timestamp
     var ts = document.createElement('div');
     ts.className = 'card-timestamp';
     ts.textContent = item.timestamp
       ? 'Saved: ' + new Date(item.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
       : '';
 
-    // ── Assemble ──
+    //  Assemble 
     card.appendChild(headerDiv);
     card.appendChild(ul);
     if (item.profileUrl) card.appendChild(link);
@@ -171,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return card;
   }
 
-  /* ── Delete one item ── */
+  /* ─Delete one item  */
   function deleteItem(id) {
     globalData = globalData.filter(function (i) { return i.id !== id; });
     chrome.storage.local.set({ linkedin_crm_data: globalData }, function () {
@@ -180,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Save note on a card ── */
+  /*  Save note on a card  */
   function saveNote(id, noteText, btn) {
     var item = globalData.find(function (i) { return i.id === id; });
     if (!item) return;
@@ -192,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Clear all (with confirmation) ── */
+  /*Clear all (with confirmation) */
   function clearAll() {
     if (!confirm('⚠️ Delete ALL saved entries? This cannot be undone.')) return;
     globalData = [];
@@ -203,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Export CSV ── */
+  /*  Export CSV */
   function exportCSV() {
     if (globalData.length === 0) {
       alert('No data to export yet.');
