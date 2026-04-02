@@ -1,13 +1,3 @@
-/**
- * LinkedIn Bucket Saver — content.js v11 FINAL
- *
- * Features:
- * - Main profile page: scoped to recognized <section> tags only (no layout breaking)
- * - "Show all" detail pages (/details/experience/ etc): full page scan, category from URL
- * - Extension context invalidation handled gracefully
- * - Zero el.style mutations — buttons are fully self-contained
- */
-
 console.log('🪣 LBS v11 FINAL loaded on', location.href);
 
 const LBS = {
@@ -36,7 +26,7 @@ const LBS = {
   ]
 };
 
-/* ── SPA Watcher ── */
+/* SPA Watcher */
 let _lastUrl = location.href, _timer = null;
 function _schedule(ms) { clearTimeout(_timer); _timer = setTimeout(runInjection, ms); }
 
@@ -56,7 +46,7 @@ setTimeout(function() { runInjection(); }, 3500);
 setTimeout(function() { runInjection(); }, 6000);
 setTimeout(function() { runInjection(); }, 10000);
 
-/* ── Main ── */
+/* Main */
 function runInjection() {
   if (!LBS.profilePattern.test(location.href)) return;
   try {
@@ -70,12 +60,11 @@ function runInjection() {
   }
 }
 
-/* ── Core scanner ── */
+/* Core scanner */
 function findAndInject(savedIds) {
   var injected = 0;
 
-  // ── DETAIL PAGE: /in/username/details/experience/ etc ──
-  // Whole page is one category — read category from URL, scan entire main
+  // ── DETAIL PAGE: 
   if (LBS.detailPagePattern.test(location.href)) {
     var urlCategory = getCategoryFromUrl();
     var root = document.querySelector('main') || document.body;
@@ -117,13 +106,13 @@ function findAndInject(savedIds) {
     return;
   }
 
-  // ── MAIN PROFILE PAGE: scan only inside recognized <section> tags ──
+  //  MAIN PROFILE PAGE: scan only inside recognized <section> tags
   var sections = document.querySelectorAll('section');
 
   sections.forEach(function(section) {
     var category = getSectionCategory(section);
-    if (!category) return; // Not Experience/Education/etc — skip entirely
-
+    if (!category) return; 
+    
     Array.from(section.querySelectorAll('*')).forEach(function(el) {
       if (el.dataset.lbsInjected) return;
       if (LBS.skipTags[el.tagName]) return;
@@ -140,7 +129,7 @@ function findAndInject(savedIds) {
       if (lines.length > LBS.maxLines) return;
       if (!LBS.dateSignal.test(text) && !LBS.eduSignal.test(text)) return;
 
-      // Leaf check: skip if a direct child has 3+ lines + date signal
+      
       var kids = el.children;
       for (var i = 0; i < kids.length; i++) {
         var ct = '';
@@ -161,7 +150,7 @@ function findAndInject(savedIds) {
   console.log('🪣 v11 DONE — injected:', injected);
 }
 
-/* ── Detect category from /details/experience/ URL ── */
+
 function getCategoryFromUrl() {
   var path = location.pathname.toLowerCase();
   var m = path.match(/\/details\/([^/]+)/);
@@ -178,7 +167,7 @@ function getCategoryFromUrl() {
   return 'General';
 }
 
-/* ── Detect category from a <section>'s headings ── */
+
 function getSectionCategory(section) {
   var attr = [section.id || '', section.getAttribute('aria-label') || ''].join(' ').toLowerCase();
   for (var i = 0; i < LBS.categoryMap.length; i++) {
@@ -197,7 +186,7 @@ function getSectionCategory(section) {
   return null;
 }
 
-/* ── Profile name — 5 fallback strategies ── */
+
 function getProfileName() {
   var selectors = ['main h1', '.pv-text-details__left-panel h1', '.ph5 h1', 'section h1', 'h1'];
   for (var i = 0; i < selectors.length; i++) {
@@ -212,7 +201,7 @@ function getProfileName() {
   return 'Unknown';
 }
 
-/* ── Button — zero parent style mutations, fully self-contained ── */
+
 function injectBtn(el, id, category, isSaved) {
   var wrap = document.createElement('div');
   wrap.setAttribute('style',
@@ -245,7 +234,7 @@ function injectBtn(el, id, category, isSaved) {
   el.appendChild(wrap);
 }
 
-/* ── Save to storage ── */
+/*  Save to storage  */
 function doSave(el, id, category, btn) {
   btn.textContent = '⏳'; btn.disabled = true;
   var name = getProfileName();
